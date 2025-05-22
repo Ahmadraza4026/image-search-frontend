@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }) => {
       }
     );
     return () => apiClient.interceptors.response.eject(interceptor);
-  }, []);
+  }, [refreshAccessToken]);
 
   // Load user on first mount if accessToken exists
   useEffect(() => {

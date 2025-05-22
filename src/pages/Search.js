@@ -56,7 +56,7 @@ function ImageGrid({ images, lastImageRef, onToggleFavorite, favoriteIds, isVide
 }
 
 function Search() {
-  const theme = useTheme();
+  // const theme = useTheme();
 
   const [query, setQuery] = useState('');
   const [images, setImages] = useState([]);
@@ -66,7 +66,7 @@ function Search() {
   const [orientation, setOrientation] = useState('all');
   const [color, setColor] = useState('all');
   const [resolution, setResolution] = useState('');
-  const [page, setPage] = useState(1);
+  // const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [favoriteIds, setFavoriteIds] = useState([]);
 
