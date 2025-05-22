@@ -14,6 +14,17 @@ export default function ImageCard({ image }) {
     toggleFavorite(image);
   };
 
+  // Determine if it's an image or video
+  const isImage = !!image.urls;
+  const isVideo = !!image.video_files;
+
+  // For image src
+  const imageSrc = image.urls?.small || image.urls?.regular;
+
+  // For video src (take first video file with mp4)
+  const videoSrc = image.video_files?.find((file) => file.file_type === 'video/mp4')?.link || 
+                   image.video_files?.[0]?.link;
+
   return (
     <Card
       sx={{
@@ -36,13 +47,26 @@ export default function ImageCard({ image }) {
         },
       }}
     >
-      <CardMedia
-        component="img"
-        height="200"
-        image={image.urls.small}
-        alt={image.alt_description || 'Image'}
-        sx={{ borderRadius: '10px 10px 0 0' }}
-      />
+      {isImage && (
+        <CardMedia
+          component="img"
+          height="200"
+          image={imageSrc}
+          alt={image.alt_description || 'Image'}
+          sx={{ borderRadius: '10px 10px 0 0' }}
+        />
+      )}
+
+      {isVideo && videoSrc && (
+        <CardMedia
+          component="video"
+          height="200"
+          controls
+          src={videoSrc}
+          sx={{ borderRadius: '10px 10px 0 0', objectFit: 'cover' }}
+        />
+      )}
+
       <IconButton
         onClick={handleToggleFavorite}
         sx={{

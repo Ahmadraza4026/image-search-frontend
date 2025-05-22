@@ -63,7 +63,8 @@ const Home = () => {
 
     const loadTrendingKeywords = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/trending-keywords');
+        const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+        const res = await axios.get(`${API_BASE}/trending-keywords`);
         setTrendingKeywords(res.data.keywords || []);
       } catch (err) {
         console.error('Failed to load trending keywords:', err);
