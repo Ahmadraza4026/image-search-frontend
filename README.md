@@ -42,6 +42,18 @@ A full-stack web and mobile app to search, browse, and favorite images and video
 
 1. Clone the repository:
 
-   ```bash
    git clone https://github.com/Ahmadraza4026/image-search-frontend.git
    cd image-search-frontend
+2. Install dependencies:
+
+npm install
+3. Create a .env file and add:
+
+REACT_APP_UNSPLASH_ACCESS_KEY=your_unsplash_access_key
+REACT_APP_PEXELS_API_KEY=your_pexels_api_key
+REACT_APP_BACKEND_URL=http://localhost:5000
+
+4. Run the frontend server:
+
+npm start
+
