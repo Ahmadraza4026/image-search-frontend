@@ -12,9 +12,8 @@ import {
   Box,
   Grid,
 } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import unsplashApi from '../api/unsplash';
-import apiClient from '../api/apiClient'; // your axios instance for backend
+import apiClient from '../api/apiClient';
 import { AnimatePresence, motion } from 'framer-motion';
 import ImageCard from '../components/ImageCard';
 import SearchBar from '../components/SearchBar';
@@ -33,7 +32,6 @@ function ImageGrid({ images, lastImageRef, onToggleFavorite, favoriteIds, isVide
               sm={6}
               md={4}
               key={img.id}
-              ref={isLast ? lastImageRef : null}
               component={motion.div}
               layout
               initial={{ opacity: 0, y: 20 }}
@@ -41,12 +39,14 @@ function ImageGrid({ images, lastImageRef, onToggleFavorite, favoriteIds, isVide
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.4, delay: index * 0.05 }}
             >
-              <ImageCard
-                image={img}
-                isVideo={isVideo}
-                isFavorite={favoriteIds.includes(img.id)}
-                onToggleFavorite={() => onToggleFavorite(img)}
-              />
+              <div ref={isLast ? lastImageRef : null}>
+                <ImageCard
+                  image={img}
+                  isVideo={isVideo}
+                  isFavorite={favoriteIds.includes(img.id)}
+                  onToggleFavorite={() => onToggleFavorite(img)}
+                />
+              </div>
             </Grid>
           );
         })}
@@ -56,13 +56,11 @@ function ImageGrid({ images, lastImageRef, onToggleFavorite, favoriteIds, isVide
 }
 
 function Search() {
-  // const theme = useTheme();
-
   const [query, setQuery] = useState('');
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [searchType, setSearchType] = useState('images'); // 'images' or 'videos'
+  const [searchType, setSearchType] = useState('images');
   const [orientation, setOrientation] = useState('all');
   const [color, setColor] = useState('all');
   const [resolution, setResolution] = useState('');
@@ -72,7 +70,6 @@ function Search() {
 
   const observer = useRef();
 
-  // Fetch favorites on mount
   useEffect(() => {
     async function fetchFavorites() {
       try {
@@ -85,7 +82,6 @@ function Search() {
     fetchFavorites();
   }, []);
 
-  // fetchImages now takes pageToFetch and reset params explicitly
   const fetchImages = useCallback(
     async (pageToFetch, reset = false) => {
       if (!query.trim()) return;
@@ -95,6 +91,7 @@ function Search() {
 
       try {
         let results = [];
+
         if (searchType === 'images') {
           const response = await unsplashApi.get('/search/photos', {
             params: {
@@ -138,7 +135,6 @@ function Search() {
     [query, searchType, orientation, color, resolution]
   );
 
-  // Reset page and fetch new data when query or filters change
   useEffect(() => {
     if (query.trim()) {
       setPage(1);
@@ -149,7 +145,6 @@ function Search() {
     }
   }, [query, searchType, orientation, color, resolution, fetchImages]);
 
-  // Intersection observer for infinite scroll
   const lastImageRef = useCallback(
     (node) => {
       if (loading) return;
@@ -210,7 +205,7 @@ function Search() {
         minHeight: '100vh',
       }}
     >
-      <Typography variant="h3" gutterBottom align="center" sx={{ fontWeight: 700, color: 'text.primary' }}>
+      <Typography variant="h3" gutterBottom align="center" sx={{ fontWeight: 700 }}>
         Search for {searchType === 'images' ? 'Images' : 'Videos'}
       </Typography>
 
