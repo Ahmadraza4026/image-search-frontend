@@ -1,4 +1,5 @@
 // src/context/AuthContext.js
+
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import apiClient from '../api/apiClient';
 
@@ -13,6 +14,22 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('token');
     localStorage.removeItem('refreshToken');
     setUser(null);
+  };
+
+  const login = async (accessToken, refreshToken) => {
+    try {
+      localStorage.setItem('token', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
+      const res = await apiClient.get('/users/me', {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      setUser(res.data);
+      return true;
+    } catch (err) {
+      console.error('Login failed:', err);
+      logout();
+      return false;
+    }
   };
 
   const refreshAccessToken = async () => {
@@ -60,7 +77,9 @@ export const AuthProvider = ({ children }) => {
       return;
     }
 
-    apiClient.get('/users/me')
+    apiClient.get('/users/me', {
+      headers: { Authorization: `Bearer ${token}` },
+    })
       .then((res) => setUser(res.data))
       .catch((err) => {
         console.error('Failed to load user:', err);
@@ -71,7 +90,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, setUser, logout, loading }}>
+    <AuthContext.Provider value={{ user, setUser, login, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );
